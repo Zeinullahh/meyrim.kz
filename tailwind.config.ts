@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
+  darkMode: ["variant", "&[data-theme=\"dark\"]"],
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -11,6 +12,8 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        card: "var(--card)",
+        "card-foreground": "var(--card-foreground)",
         primary: {
           50: "#f0fdfa",
           100: "#ccfbf1",
@@ -56,13 +59,13 @@ const config: Config = {
         display: ["var(--font-geist-sans)", "system-ui", "sans-serif"],
       },
       animation: {
-        "float": "float 6s ease-in-out infinite",
+        float: "float 6s ease-in-out infinite",
         "float-delayed": "float 6s ease-in-out 3s infinite",
         "pulse-slow": "pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite",
         "spin-slow": "spin 12s linear infinite",
         "gradient-shift": "gradient-shift 8s ease infinite",
-        "blob": "blob 7s infinite",
-        "shimmer": "shimmer 2s linear infinite",
+        blob: "blob 7s infinite",
+        shimmer: "shimmer 2s linear infinite",
       },
       keyframes: {
         float: {

@@ -15,13 +15,13 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Мейрим — Многопрофильный медицинский центр в Астане",
+  title: "Мейірім — Многопрофильный медицинский центр в Астане",
   description:
     "Современная многопрофильная клиника в центре Астаны. Диагностика, консультации, стационар и хирургия. 25 специальностей, современное оборудование, национальная аккредитация.",
   keywords: [
-    "клиника мейрим",
-    "мейрим астана",
-    "астана мейрим",
+    "клиника мейірім",
+    "мейірім астана",
+    "астана мейірім",
     "клиника астана",
     "медицинский центр",
     "диагностика астана",
@@ -34,10 +34,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ru">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+    <html lang="ru" data-theme="light">
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {children}
       </body>
     </html>

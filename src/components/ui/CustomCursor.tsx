@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 export function CustomCursor() {
   const [isHovering, setIsHovering] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [isMobile, setIsMobile] = useState(true);
 
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
@@ -15,6 +16,10 @@ export function CustomCursor() {
   const cursorYSpring = useSpring(cursorY, springConfig);
 
   useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
     const moveCursor = (e: MouseEvent) => {
       cursorX.set(e.clientX);
       cursorY.set(e.clientY);
@@ -31,37 +36,44 @@ export function CustomCursor() {
     document.addEventListener("mouseenter", handleMouseEnter);
     document.addEventListener("mouseleave", handleMouseLeave);
 
-    // Add hover detection for interactive elements
-    const interactiveElements = document.querySelectorAll(
-      "a, button, [role='button'], input, textarea, select"
-    );
+    const addHoverListeners = () => {
+      const interactiveElements = document.querySelectorAll(
+        "a, button, [role='button'], input, textarea, select"
+      );
+      interactiveElements.forEach((el) => {
+        el.addEventListener("mouseenter", handleHoverStart);
+        el.addEventListener("mouseleave", handleHoverEnd);
+      });
+    };
 
-    interactiveElements.forEach((el) => {
-      el.addEventListener("mouseenter", handleHoverStart);
-      el.addEventListener("mouseleave", handleHoverEnd);
-    });
+    addHoverListeners();
+
+    // Re-add listeners when DOM changes
+    const observer = new MutationObserver(addHoverListeners);
+    observer.observe(document.body, { childList: true, subtree: true });
 
     return () => {
       window.removeEventListener("mousemove", moveCursor);
       document.removeEventListener("mouseenter", handleMouseEnter);
       document.removeEventListener("mouseleave", handleMouseLeave);
-      interactiveElements.forEach((el) => {
-        el.removeEventListener("mouseenter", handleHoverStart);
-        el.removeEventListener("mouseleave", handleHoverEnd);
-      });
+      window.removeEventListener("resize", checkMobile);
+      observer.disconnect();
     };
   }, [cursorX, cursorY, isVisible]);
 
-  // Only show custom cursor on desktop
-  if (typeof window !== "undefined" && window.innerWidth < 1024) {
-    return null;
-  }
+  if (isMobile) return null;
 
   return (
     <>
+      <style>{`
+        @media (min-width: 1024px) {
+          body { cursor: none !important; }
+          a, button, [role='button'], input, textarea, select { cursor: none !important; }
+        }
+      `}</style>
       {/* Main cursor dot */}
       <motion.div
-        className="fixed top-0 left-0 pointer-events-none z-[9998] mix-blend-difference"
+        className="fixed top-0 left-0 pointer-events-none z-[9998] mix-blend-difference hidden lg:block"
         style={{
           x: cursorXSpring,
           y: cursorYSpring,
@@ -81,7 +93,7 @@ export function CustomCursor() {
 
       {/* Cursor ring */}
       <motion.div
-        className="fixed top-0 left-0 pointer-events-none z-[9997]"
+        className="fixed top-0 left-0 pointer-events-none z-[9997] hidden lg:block"
         style={{
           x: cursorXSpring,
           y: cursorYSpring,
